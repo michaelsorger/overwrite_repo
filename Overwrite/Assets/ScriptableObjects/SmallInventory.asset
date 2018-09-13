@@ -11,5 +11,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ef79f80841b4c54dbc3023c7cf3a4b9, type: 3}
   m_Name: SmallInventory
   m_EditorClassIdentifier: 
-  keyList:
-  - red_key
+  keyList: []

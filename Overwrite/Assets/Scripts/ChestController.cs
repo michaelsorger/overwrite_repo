@@ -10,6 +10,11 @@ public class ChestController : MonoBehaviour {
     public string key_required;
 
     /// <summary>
+    /// The Game Manager
+    /// </summary>
+    public GameObject GM;
+
+    /// <summary>
     /// The small inventory
     /// </summary>
     [SerializeField]
@@ -24,6 +29,7 @@ public class ChestController : MonoBehaviour {
         if(theSmallInventory.keyList.Contains(key_required))
         {
             theSmallInventory.keyList.Add(this.gameObject.name);
+            GM.GetComponentInChildren<Spawner>().prefab = null;
             Destroy(this.gameObject);
         }
     }

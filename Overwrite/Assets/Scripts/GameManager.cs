@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour {
 
+
     /// <summary>
-    /// The list of interactable gameObjects to spawn
+    /// The list of Camera Focuses
     /// </summary>
-    public List<GameObject> gameObjectsToSpawn;
+    public List<Camera> CameraFocuses;
 
     /// <summary>
     /// The small inventory
@@ -16,9 +17,10 @@ public class GameManager : MonoBehaviour {
     private SmallInventory theSmallInventory;
 
     /// <summary>
-    /// The list of Camera Focuses
+    /// The small inventory
     /// </summary>
-    public List<Camera> CameraFocuses;
+    [SerializeField]
+    private PositionPoints positionPoints;
 
     /// <summary>
     /// The Camera Focus Index
@@ -27,23 +29,14 @@ public class GameManager : MonoBehaviour {
 
 	void Start ()
     {
-        //Default to third person camera focus
+        //Default to 2D person camera focus
         SetupCameras();
 
-        //Instantiate only needed objects depending on inventory
-        foreach(GameObject obj in gameObjectsToSpawn)
-        {
-            if(theSmallInventory.keyList.Contains(obj.name))
-            {
-                //Just don't spawn any items in theSmallInventory
-                obj.SetActive(false);
-            }
-        }
+        //Clear theSmallInventory (for now)
+        theSmallInventory.keyList.Clear();
 
-        foreach(string s in theSmallInventory.keyList)
-        {
-            Debug.Log("Inventory contains " + s);
-        }
+        //Zero out the player position saves (always)
+        positionPoints.positionPoint = Vector3.zero;
 	}
 	
 	void Update ()
@@ -59,9 +52,12 @@ public class GameManager : MonoBehaviour {
     /// </summary>
     private void SetupCameras()
     {
-        CameraFocusIndex = 0;
-        CameraFocuses[CameraFocusIndex].enabled = true;
-        CameraFocuses[CameraFocusIndex + 1].enabled = false;
+        if(CameraFocuses != null)
+        {
+            CameraFocusIndex = 0;
+            CameraFocuses[CameraFocusIndex].enabled = true;
+            CameraFocuses[CameraFocusIndex + 1].enabled = false;
+        }
     }
 
     /// <summary>
@@ -69,21 +65,37 @@ public class GameManager : MonoBehaviour {
     /// </summary>
     private void UpdateCameraFocus()
     {
-        CameraFocusIndex += 1;
-        if (CameraFocusIndex > CameraFocuses.Count - 1)
+        if(CameraFocuses != null)
         {
-            CameraFocusIndex = 0;
-        }
-        for (int i = 0; i < CameraFocuses.Count; i++)
-        {
-            if (i == CameraFocusIndex)
+            CameraFocusIndex += 1;
+            if (CameraFocusIndex > CameraFocuses.Count - 1)
             {
-                CameraFocuses[i].enabled = true;
+                CameraFocusIndex = 0;
             }
-            else
+            for (int i = 0; i < CameraFocuses.Count; i++)
             {
-                CameraFocuses[i].enabled = false;
+                if (i == CameraFocusIndex)
+                {
+                    CameraFocuses[i].enabled = true;
+                }
+                else
+                {
+                    CameraFocuses[i].enabled = false;
+                }
             }
         }
     }
 }
+
+/*
+Instantiate only needed objects depending on inventory
+foreach(GameObject obj in gameObjectsToSpawn)
+{
+
+if(theSmallInventory.keyList.Contains(obj.name))
+{
+//Just don't spawn any items in theSmallInventory
+obj.SetActive(false);
+}
+}
+*/
