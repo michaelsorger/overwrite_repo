@@ -26,12 +26,12 @@ public class KeyController : MonoBehaviour {
     }
 
     /// <summary>
-    /// Ons the Trigger Enter
+    /// Ons the Trigger Stay
     /// </summary>
     /// <param name="box"></param>
-    void OnTriggerEnter(Collider collider)
+    void OnTriggerStay(Collider collider)
     {
-        Debug.Log("KeyController OnTriggerEnter");
+        Debug.Log("KeyController OnTriggerStay");
         pathFollower.condition = true;
         theSmallInventory.keyList.Add(this.name);
         //gameObject.SetActive(false);

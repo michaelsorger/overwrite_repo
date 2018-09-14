@@ -10,6 +10,26 @@ public class PathFollower : MonoBehaviour {
     public bool condition;
 
     /// <summary>
+    /// Determines if deleted once reaching destination
+    /// </summary>
+    public bool toDelete;
+
+    /// <summary>
+    /// Determines if goes back to original position
+    /// </summary>
+    public bool toBack;
+
+    /// <summary>
+    /// Related to toBack, amount of time before object starts going back
+    /// </summary>
+    public int timeToBack;
+
+    /// <summary>
+    /// Initial position of object
+    /// </summary>
+    public Vector3 ogPosition;
+
+    /// <summary>
     /// The position to move to
     /// </summary>
     public Vector3 moveTo;
@@ -19,17 +39,43 @@ public class PathFollower : MonoBehaviour {
     /// </summary>
     public float speed;
 
+    /// <summary>
+    /// Controls when the objects starts going back to position
+    /// </summary>
+    private bool startBack;
+
 	// Update is called once per frame
 	void Update ()
     {
-        if(condition)
+        if (startBack == true)
+        {
+            condition = false;
+            transform.position = Vector3.MoveTowards(transform.position, ogPosition, speed);
+            if (transform.position == ogPosition)
+            {
+                startBack = false;
+            }
+        }
+
+        if (condition)
         {
             transform.position = Vector3.MoveTowards(transform.position, moveTo, speed);
-            if (transform.position == moveTo)
+            if (transform.position == moveTo && toDelete == true)
             {
                 Destroy(this.gameObject);
             }
+            if (transform.position == moveTo && toBack == true)
+            {
+                StartCoroutine(Wait());
+            }
         }
+    }
+
+    IEnumerator Wait()
+    {
+        yield return new WaitForSeconds(timeToBack);
+        startBack = true;
+        condition = false;
     }
 
     /// <summary>

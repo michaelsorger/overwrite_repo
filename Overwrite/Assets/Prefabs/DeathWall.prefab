@@ -109,5 +109,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   condition: 1
+  toDelete: 1
+  toBack: 0
+  timeToBack: 0
+  ogPosition: {x: 0, y: 0, z: 0}
   moveTo: {x: 0, y: 5, z: 10}
-  speed: 0.03
+  speed: 0.025
