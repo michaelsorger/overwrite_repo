@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Function for giving enemies a FOV
+/// </summary>
 public class EnemySight : MonoBehaviour {
 
     /// <summary>

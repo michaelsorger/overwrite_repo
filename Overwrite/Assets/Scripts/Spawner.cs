@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Constant spawner for objects
+/// </summary>
 public class Spawner : MonoBehaviour {
 
     /// <summary>
