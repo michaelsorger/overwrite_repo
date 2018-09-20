@@ -10,17 +10,23 @@ public class PlayerController : MonoBehaviour {
     [SerializeField]
     private PositionPoints posPoints;
 
+    /// <summary>
+    /// Ghost object used to show the player's saved position
+    /// </summary>
+    public GameObject saveGhost;
+
 	// Use this for initialization
 	void Start () {
-		
-	}
+        saveGhost = Instantiate(saveGhost, transform.position, transform.rotation);
+    }
 	
 	// Update is called once per frame
 	void Update () {
 		if(Input.GetButtonDown("SavePosition"))
         {
             posPoints.positionPoint = this.gameObject.transform.position;
-            Debug.Log("Position Overwrited at " + posPoints.positionPoint);
+            saveGhost.transform.position = gameObject.transform.position;
+            
         }
         else if(Input.GetButton("Teleport"))
         {

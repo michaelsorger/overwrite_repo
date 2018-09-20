@@ -31,7 +31,6 @@ public class KeyController : MonoBehaviour {
     /// <param name="box"></param>
     void OnTriggerStay(Collider collider)
     {
-        Debug.Log("KeyController OnTriggerStay");
         pathFollower.condition = true;
         theSmallInventory.keyList.Add(this.name);
         //gameObject.SetActive(false);
