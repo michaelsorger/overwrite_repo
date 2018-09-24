@@ -25,8 +25,7 @@ public class PlayerController : MonoBehaviour {
 		if(Input.GetButtonDown("SavePosition"))
         {
             posPoints.positionPoint = this.gameObject.transform.position;
-            saveGhost.transform.position = gameObject.transform.position;
-            
+            saveGhost.transform.position = gameObject.transform.position;        
         }
         else if(Input.GetButton("Teleport"))
         {
