@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Destroys player or enemy
+/// </summary>
 public class EntityDestroyer : MonoBehaviour {
 
     private void OnTriggerStay(Collider collider)

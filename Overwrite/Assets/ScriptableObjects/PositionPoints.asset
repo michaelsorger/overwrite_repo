@@ -11,4 +11,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90c386b92b95594438dbf4c9ab7a7198, type: 3}
   m_Name: PositionPoints
   m_EditorClassIdentifier: 
-  positionPoint: {x: 0, y: 0, z: 0}
+  positionPoint: {x: 2.5, y: 0.4098001, z: -7.886755}
+  rotationPoint: {x: 0, y: 7.1e-44, z: 0, w: 1}

@@ -25,7 +25,9 @@ public class PlayerController : MonoBehaviour {
 		if(Input.GetButtonDown("SavePosition"))
         {
             posPoints.positionPoint = this.gameObject.transform.position;
+            posPoints.rotationPoint = this.gameObject.transform.rotation;
             saveGhost.transform.position = gameObject.transform.position;
+            saveGhost.transform.rotation = gameObject.transform.rotation;
             
         }
         else if(Input.GetButton("Teleport"))
@@ -33,6 +35,7 @@ public class PlayerController : MonoBehaviour {
             if(posPoints.positionPoint != null)
             {
                 this.gameObject.transform.position = posPoints.positionPoint;
+                this.gameObject.transform.rotation = posPoints.rotationPoint;
             }
         }
 	}

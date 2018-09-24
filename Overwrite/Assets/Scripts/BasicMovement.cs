@@ -19,13 +19,27 @@ public class BasicMovement : MonoBehaviour
         if (Input.GetKey("a"))
         {
             pos.z += speed * Time.deltaTime;
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(transform.position-pos), 0.5F);
         }
         if (Input.GetKey("d"))
         {
             pos.z -= speed * Time.deltaTime;
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(transform.position-pos), 0.5F);
+        }
+        if (Input.GetKey("w"))
+        {
+            pos.x += speed * Time.deltaTime;
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(transform.position-pos), 0.5F);
+        }
+        if (Input.GetKey("s"))
+        {
+            pos.x -= speed * Time.deltaTime;
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(transform.position-pos), 0.5F);
         }
 
+        
         transform.position = pos;
+        
     }
 
 }

@@ -25,7 +25,7 @@ public class EnemySight : MonoBehaviour {
     /// <summary>
     /// Bool determining if the player is seen by enemy
     /// </summary>
-    public bool isSeen;
+    public TriggersClass isSeenTrigger;
 
     Mesh viewMesh;
     public MeshFilter viewMeshFilter;
@@ -51,7 +51,7 @@ public class EnemySight : MonoBehaviour {
         int rayCount = Mathf.RoundToInt(viewAngle);
         float stepAngleSize = viewAngle / rayCount;
 
-        isSeen = false;
+        isSeenTrigger.trigger = false;
 
         for (int j = 0; j < rayCount; j++)
         {
@@ -59,7 +59,7 @@ public class EnemySight : MonoBehaviour {
             float angleSteps = transform.eulerAngles.y - viewAngle / 2 + stepAngleSize * j;
             if (HitPlayer(angleSteps))
             {
-                isSeen = true;
+                isSeenTrigger.trigger = true;
             }
         }
 
@@ -142,6 +142,6 @@ public class EnemySight : MonoBehaviour {
     /// <returns></returns>
     Vector3 DirectionFromAngle(float angle)
     {
-        return new Vector3(0, Mathf.Sin(angle * Mathf.Deg2Rad), Mathf.Cos(angle * Mathf.Deg2Rad));
+        return new Vector3(Mathf.Sin(angle * Mathf.Deg2Rad),0, Mathf.Cos(angle * Mathf.Deg2Rad));
     }
 }
