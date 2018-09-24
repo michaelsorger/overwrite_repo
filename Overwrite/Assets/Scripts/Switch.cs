@@ -19,6 +19,8 @@ public class Switch : MonoBehaviour {
 
     /// <summary>
     /// List of objects to manipulate, defined in levelcreate scene
+    /// Set this to true to have objects to manipulate be active in scene
+    /// Set this to false to have objects to manipulate be inactive in scene
     /// </summary>
     [SerializeField]
     private List<GameObject> objs;
@@ -78,7 +80,7 @@ public class Switch : MonoBehaviour {
                 {
                     GameObject go = GameObject.FindWithTag(objTags[i]);
                     objs.Add(go);
-                    go.SetActive(!sw);
+                    go.SetActive(false);
                 }
             }
             for (int i = 0; i < objs.Count; i++)
