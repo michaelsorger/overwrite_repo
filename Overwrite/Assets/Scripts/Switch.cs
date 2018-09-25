@@ -28,7 +28,8 @@ public class Switch : MonoBehaviour {
     private bool trigger;
 
     /// <summary>
-    /// Sets objects referenced by this lever to be active or inactive
+    /// Sets objects referenced by this lever to be rotated open or closed
+    /// (change me to be more generic later, inactive causes problems with serialization though)
     /// </summary>
 	void GetCondition () {
 
@@ -36,14 +37,14 @@ public class Switch : MonoBehaviour {
         {
             for (int i = 0; i < objs.Count; i++)
             {
-                objs[i].SetActive(true);
+                objs[i].transform.Rotate(Vector3.forward, 90);
             }
         }
         else
         {
             for (int i = 0; i < objs.Count; i++)
             {
-                objs[i].SetActive(false);
+                objs[i].transform.Rotate(Vector3.forward, -90);
             }
         }
 	}
@@ -85,7 +86,11 @@ public class Switch : MonoBehaviour {
             }
             for (int i = 0; i < objs.Count; i++)
             {
-                objs[i].SetActive(sw);
+                objs[i].SetActive(true);
+                if(sw)
+                {
+                    objs[i].transform.Rotate(Vector3.forward, 90);
+                }
             }
         }
     

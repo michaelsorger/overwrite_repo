@@ -8,9 +8,12 @@ TagManager:
   - Enemy
   - PlayerStartPosition
   - LevelCreator
-  - Door
   - Lever
   - Wall
+  - Lever_0
+  - Lever_1
+  - Lever_2
+  - Lever_3
   layers:
   - Default
   - TransparentFX

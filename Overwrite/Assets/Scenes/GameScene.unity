@@ -214,6 +214,8 @@ MonoBehaviour:
     type: 2}
   theLeverPrefab: {fileID: 1346577585046410, guid: a1654ca5d172fc34ca3dbe3d673c1645,
     type: 2}
+  thePosPoints: {fileID: 11400000, guid: 01cc0803270c26a478145c877bb9f296, type: 2}
+  theTempLevel: {fileID: 11400000, guid: 0f4f2f858eb2590419920d5b67952bea, type: 2}
 --- !u!4 &792215190
 Transform:
   m_ObjectHideFlags: 0

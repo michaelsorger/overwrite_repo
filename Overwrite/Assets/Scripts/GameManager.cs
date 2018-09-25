@@ -6,11 +6,6 @@ using Newtonsoft.Json;
 public class GameManager : MonoBehaviour
 {
     /// <summary>
-    /// The level being manipulated
-    /// </summary>
-    public LevelToSave theLevelToSave;
-
-    /// <summary>
     /// User set level to play
     /// </summary>
     [SerializeField]
@@ -46,6 +41,12 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private GameObject theLeverPrefab;
 
+    /// <summary>
+    /// The script obj holding data to teleport to
+    /// </summary>
+    [SerializeField]
+    private PositionPoints thePosPoints;
+
     private int badCounter = 0;
 
     void Start()
@@ -55,45 +56,64 @@ public class GameManager : MonoBehaviour
         {
             if(LvlInfo.name.Equals(theLevelToPlay))
             {
-                //Instantiate walls at there position and rotation
-                foreach(PositionRotationScale wprs in LvlInfo.wallPRSList)
-                {
-                    GameObject newObject = GameObject.Instantiate(theWallPrefab, wprs.position, wprs.rotation);
-                    newObject.transform.localScale = wprs.scaler;
-                }
-                
-                //Instantiate doors at there position and rotation
-                foreach(PositionRotationScale dt in LvlInfo.doorPRSList)
-                {
-                    GameObject newObject = GameObject.Instantiate(theDoorPrefab, dt.position, dt.rotation);
-                    newObject.transform.localScale = dt.scaler;
-                }
-
-                //Deserialize JSON string for levers in scriptable object
-                Dictionary<string, List<string>> switchControlDict = new Dictionary<string, List<string>>();
-                switchControlDict = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(LvlInfo.switchControlJSON);
-
-                //Instantiate lever, and add references obtained from json serialized object
-                foreach(KeyValuePair<string, List<string>> leverToRefs in switchControlDict)
-                {
-                    string[] words = leverToRefs.Key.Split(':');                   
-                    PositionRotationScale prs = new PositionRotationScale();
-                    prs.position = getVector3(words[0]);
-                    prs.rotation = getRotation3(words[1]);
-                    prs.scaler = getVector3(words[2]);
-                    GameObject newObject = GameObject.Instantiate(theLeverPrefab, prs.position, prs.rotation);
-                    newObject.transform.localScale = prs.scaler;
-                    newObject.GetComponent<Switch>().objTags = leverToRefs.Value;
-                    newObject.GetComponent<Switch>().swtch = getSwtch(words[3]);
-                    newObject.GetComponent<Switch>().UpdateSwitchList(false, newObject.GetComponent<Switch>().swtch);
-                }
-
-                GameObject.Instantiate(thePlayerPrefab, LvlInfo.playerStartPosition, thePlayerPrefab.transform.rotation);
-
-                theLevelToSave.savedLevelInformation = LvlInfo;
-                theLevelToSave.changedLevelInformation = LvlInfo;
+                DeserializeFromScriptObj(LvlInfo, theWallPrefab, theDoorPrefab, thePlayerPrefab, theLeverPrefab, thePosPoints);
+                break;
             }
         }
+    }
+
+    public static void DeserializeFromScriptObj(LevelInformation theLevelInfo, GameObject theWallPrefab, GameObject theDoorPrefab,
+        GameObject thePlayerPrefab, GameObject theLeverPrefab, PositionPoints thePosPoints)
+    {
+        //Deserialize JSON string for simple objects in scriptable object
+        Dictionary<string, List<string>> tagGameObjMap = new Dictionary<string, List<string>>();
+        tagGameObjMap = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(theLevelInfo.tagGameObjectListJSON);
+
+        foreach (KeyValuePair<string, List<string>> tagToObjList in tagGameObjMap)
+        {
+            Debug.Log(tagToObjList.Key + " in DeserializeFromScriptObj");
+            switch (tagToObjList.Key)
+            {
+                case "Wall":
+                    foreach (string s in tagToObjList.Value)
+                    {
+                        InstantiateSimplePrefab(theWallPrefab, tagToObjList.Key, s);
+                    }
+                    break;
+                case "Lever_0":
+                case "Lever_1":
+                case "Lever_2":
+                case "Lever_3":
+                    foreach (string s in tagToObjList.Value)
+                    {
+                        InstantiateSimplePrefab(theDoorPrefab, tagToObjList.Key, s);
+                    }
+                    break;
+            }
+        }
+
+        //Deserialize JSON string for levers in scriptable object
+        Dictionary<string, List<string>> switchControlDict = new Dictionary<string, List<string>>();
+        switchControlDict = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(theLevelInfo.switchControlJSON);
+
+        //Instantiate lever, and add references obtained from json serialized object
+        foreach (KeyValuePair<string, List<string>> leverToRefs in switchControlDict)
+        {
+            string[] words = leverToRefs.Key.Split(':');
+            PositionRotationScale prs = new PositionRotationScale();
+            prs.position = getVector3(words[0]);
+            prs.rotation = getRotation3(words[1]);
+            prs.scaler = getVector3(words[2]);
+            GameObject newObject = GameObject.Instantiate(theLeverPrefab, prs.position, prs.rotation);
+            newObject.transform.localScale = prs.scaler;
+            newObject.GetComponent<Switch>().objTags = leverToRefs.Value;
+            newObject.GetComponent<Switch>().swtch = getSwtch(words[3]);
+            newObject.GetComponent<Switch>().UpdateSwitchList(false, newObject.GetComponent<Switch>().swtch);
+        }
+
+        if(GameObject.FindGameObjectWithTag("Player") == null)
+            GameObject.Instantiate(thePlayerPrefab, theLevelInfo.playerStartPosition, thePlayerPrefab.transform.rotation);
+        thePosPoints.positionPoint = theLevelInfo.playerStartPosition;
     }
 
     /// <summary>
@@ -101,9 +121,8 @@ public class GameManager : MonoBehaviour
     /// </summary>
     /// <param name="sString"></param>
     /// <returns></returns>
-    public bool getSwtch(string sString)
+    public static bool getSwtch(string sString)
     {
-        Debug.Log(sString);
         bool ret;
         if(sString.Equals("true"))
         {
@@ -121,7 +140,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     /// <param name="rString"></param>
     /// <returns></returns>
-    public Vector3 getVector3(string rString)
+    public static Vector3 getVector3(string rString)
     {
         string newString = "";
         char[] rCharArr = rString.ToCharArray();
@@ -143,7 +162,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     /// <param name="qString"></param>
     /// <returns></returns>
-    public Quaternion getRotation3(string qString)
+    public static Quaternion getRotation3(string qString)
     {
         string newString = "";
         char[] rCharArr = qString.ToCharArray();
@@ -161,13 +180,20 @@ public class GameManager : MonoBehaviour
         return qValue;
     }
 
-}
+    /// <summary>
+    /// A simple prefab is that which only needs to be instantiated via name and position/rotation/scalar
+    /// </summary>
+    /// <param name="thisSimpleValue"></param>
+    public static void InstantiateSimplePrefab(GameObject theSimplePrefab, string thisKey, string thisSimpleValue)
+    {
+        string[] words = thisSimpleValue.Split(':');
+        PositionRotationScale prs = new PositionRotationScale();
+        prs.position = getVector3(words[0]);
+        prs.rotation = getRotation3(words[1]);
+        prs.scaler = getVector3(words[2]);
+        GameObject newObject = GameObject.Instantiate(theSimplePrefab, prs.position, prs.rotation);
+        newObject.transform.localScale = prs.scaler;
+        newObject.tag = thisKey;
+    }
 
-/// <summary>
-/// ScriptObjects to manipulate during gameplay
-/// </summary>
-public struct LevelToSave
-{
-    public LevelInformation savedLevelInformation;
-    public LevelInformation changedLevelInformation;
 }

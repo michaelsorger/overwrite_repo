@@ -17,68 +17,97 @@ public class LevelCreatorManager : MonoBehaviour {
 	// Use this for initialization
 	void Start ()
     {
-        if(theLevelInformation != null)
+        theLevelInformation = SerializeLevelIntoScriptObj(theLevelInformation);
+    }
+
+    /// <summary>
+    /// Compacts an entire level into a nice scriptable object 
+    /// TagList is the list of tags used in this level
+    /// </summary>
+    public static LevelInformation SerializeLevelIntoScriptObj(LevelInformation theLevelInfo)
+    {
+        if (theLevelInfo != null)
         {
-            //Arrays of objects to add into scriptable object, don't add duplicates
-            GameObject[] walls = GameObject.FindGameObjectsWithTag("Wall");
-            GameObject[] doors = GameObject.FindGameObjectsWithTag("Door");
-            GameObject[] levers = GameObject.FindGameObjectsWithTag("Lever");
+            Dictionary<string, List<string>> tagGameObjectMap = new Dictionary<string, List<string>>();
+            Dictionary<string, List<string>> theSwtichControlDict = new Dictionary<string, List<string>>();
 
-            //Add walls to LevelInformation
-            foreach (GameObject w in walls)
+            foreach (string t in theLevelInfo.tagList)
             {
-                PositionRotationScale prs = new PositionRotationScale();
-                prs.position = w.transform.position;
-                prs.rotation = w.transform.rotation;
-                prs.scaler = w.transform.localScale;
-
-                if(!theLevelInformation.wallPRSList.Contains(prs))
+                GameObject[] t_arr = GameObject.FindGameObjectsWithTag(t);
+                switch(t)
                 {
-                    theLevelInformation.wallPRSList.Add(prs);
-                }       
-            }
+                    case "Lever":
+                        //Add levers, and reference to levers
+                        foreach (GameObject l in t_arr)
+                        {
+                            PositionRotationScale prs = new PositionRotationScale();
+                            prs.position = l.transform.position;
+                            prs.rotation = l.transform.rotation;
+                            prs.scaler = l.transform.localScale;
+                            string key_string = prs.position.ToString() + ":" + prs.rotation.ToString() + ":" + prs.scaler.ToString() + ":" + l.GetComponent<Switch>().swtch.ToString().ToLower();
+                            List<string> tagList = l.GetComponent<Switch>().objTags;
+                            theSwtichControlDict.Add(key_string, tagList);
+                        }
+                        break;
 
-            //Add doors to LevelInformation
-            foreach (GameObject d in doors)
-            {
-                PositionRotationScale prs = new PositionRotationScale();
-                prs.position = d.transform.position;
-                prs.rotation = d.transform.rotation;
-                prs.scaler = d.transform.localScale;
-
-                if (!theLevelInformation.doorPRSList.Contains(prs))
-                {
-                    theLevelInformation.doorPRSList.Add(prs);
+                    case "Wall":
+                    case "Lever_0":
+                    case "Lever_1":
+                    case "Lever_2":
+                    case "Lever_3":
+                        foreach (GameObject go in t_arr)
+                        {
+                            LevelCreatorManager.SimpleAddToTagGameObjectMap(tagGameObjectMap, t, go);
+                        }
+                        break;
+                    default:
+                        break;
                 }
             }
 
-            Dictionary<string, List<string>> theSwtichControlDict = new Dictionary<string, List<string>>();
-
-            //Add levers, and reference to levers
-            foreach (GameObject l in levers)
-            {
-                PositionRotationScale prs = new PositionRotationScale();
-                prs.position = l.transform.position;
-                prs.rotation = l.transform.rotation;
-                prs.scaler = l.transform.localScale;
-                string key_string = prs.position.ToString() + ":" + prs.rotation.ToString() + ":" + prs.scaler.ToString() + ":" + l.GetComponent<Switch>().swtch.ToString().ToLower();
-                List<string> tagList = l.GetComponent<Switch>().objTags;
-                theSwtichControlDict.Add(key_string, tagList);
-            }
+            //Serialize simple walls and doors with name and position information
+            theLevelInfo.tagGameObjectListJSON = JsonConvert.SerializeObject(tagGameObjectMap);
 
             //Serialize levers with control information
-            theLevelInformation.switchControlJSON = JsonConvert.SerializeObject(theSwtichControlDict);
+            theLevelInfo.switchControlJSON = JsonConvert.SerializeObject(theSwtichControlDict);
 
             //Add player start position to LevelInformation (can be overwritten)
-            theLevelInformation.playerStartPosition = GameObject.FindGameObjectWithTag("PlayerStartPosition").transform.position;
+            theLevelInfo.playerStartPosition = GameObject.FindGameObjectWithTag("Player").transform.position;
 
             //Save ScriptableObject when we are done adding data
-            EditorUtility.SetDirty(theLevelInformation);
+            EditorUtility.SetDirty(theLevelInfo);
             AssetDatabase.SaveAssets();
         }
         else
         {
-            Debug.LogWarning("A LevelInfo scriptable object does not exist in the LevelCreatorManager");
+            Debug.LogWarning("No levelInfo to build from!");
+        }
+        return theLevelInfo;
+    }
+
+    /// <summary>
+    /// Adds simple gameobject, only requiring name and position/rotation/scale, to serialize for later instantiation
+    /// </summary>
+    /// <param name="tagMap"></param>
+    /// <param name="tagKeyToAdd"></param>
+    /// <param name="objToAdd"></param>
+    public static void SimpleAddToTagGameObjectMap(Dictionary<string, List<string>> tagMap, string tagKeyToAdd, GameObject objToAdd)
+    {
+        PositionRotationScale prs = new PositionRotationScale();
+        prs.position = objToAdd.transform.position;
+        prs.rotation = objToAdd.transform.rotation;
+        prs.scaler = objToAdd.transform.localScale;
+        string val_string = prs.position.ToString() + ":" + prs.rotation.ToString() + ":" + prs.scaler.ToString();
+
+        if (!tagMap.ContainsKey(tagKeyToAdd))
+        {
+            List<string> wallPrsList = new List<string>();
+            wallPrsList.Add(val_string);
+            tagMap.Add(tagKeyToAdd, wallPrsList);
+        }
+        else
+        {
+            tagMap[tagKeyToAdd].Add(val_string);
         }
     }
 }
