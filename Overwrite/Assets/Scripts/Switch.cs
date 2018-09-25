@@ -87,10 +87,6 @@ public class Switch : MonoBehaviour {
             for (int i = 0; i < objs.Count; i++)
             {
                 objs[i].SetActive(true);
-                if(sw)
-                {
-                    objs[i].transform.Rotate(Vector3.forward, 90);
-                }
             }
         }
     

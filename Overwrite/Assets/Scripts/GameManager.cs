@@ -69,51 +69,55 @@ public class GameManager : MonoBehaviour
         Dictionary<string, List<string>> tagGameObjMap = new Dictionary<string, List<string>>();
         tagGameObjMap = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(theLevelInfo.tagGameObjectListJSON);
 
-        foreach (KeyValuePair<string, List<string>> tagToObjList in tagGameObjMap)
+        if(!string.IsNullOrEmpty(theLevelInfo.tagGameObjectListJSON) || !string.IsNullOrEmpty(theLevelInfo.switchControlJSON))
         {
-            Debug.Log(tagToObjList.Key + " in DeserializeFromScriptObj");
-            switch (tagToObjList.Key)
+            foreach (KeyValuePair<string, List<string>> tagToObjList in tagGameObjMap)
             {
-                case "Wall":
-                    foreach (string s in tagToObjList.Value)
-                    {
-                        InstantiateSimplePrefab(theWallPrefab, tagToObjList.Key, s);
-                    }
-                    break;
-                case "Lever_0":
-                case "Lever_1":
-                case "Lever_2":
-                case "Lever_3":
-                    foreach (string s in tagToObjList.Value)
-                    {
-                        InstantiateSimplePrefab(theDoorPrefab, tagToObjList.Key, s);
-                    }
-                    break;
+                Debug.Log(tagToObjList.Key + " in DeserializeFromScriptObj");
+                switch (tagToObjList.Key)
+                {
+                    case "Wall":
+                        foreach (string s in tagToObjList.Value)
+                        {
+                            InstantiateSimplePrefab(theWallPrefab, tagToObjList.Key, s);
+                        }
+                        break;
+                    case "Lever_0":
+                    case "Lever_1":
+                    case "Lever_2":
+                    case "Lever_3":
+                        foreach (string s in tagToObjList.Value)
+                        {
+                            InstantiateSimplePrefab(theDoorPrefab, tagToObjList.Key, s);
+                        }
+                        break;
+                }
             }
+
+            //Deserialize JSON string for levers in scriptable object
+            Dictionary<string, List<string>> switchControlDict = new Dictionary<string, List<string>>();
+            switchControlDict = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(theLevelInfo.switchControlJSON);
+
+            //Instantiate lever, and add references obtained from json serialized object
+            foreach (KeyValuePair<string, List<string>> leverToRefs in switchControlDict)
+            {
+                string[] words = leverToRefs.Key.Split(':');
+                PositionRotationScale prs = new PositionRotationScale();
+                prs.position = getVector3(words[0]);
+                prs.rotation = getRotation3(words[1]);
+                prs.scaler = getVector3(words[2]);
+                GameObject newObject = GameObject.Instantiate(theLeverPrefab, prs.position, prs.rotation);
+                newObject.transform.localScale = prs.scaler;
+                newObject.GetComponent<Switch>().objTags = leverToRefs.Value;
+                newObject.GetComponent<Switch>().swtch = getSwtch(words[3]);
+                newObject.GetComponent<Switch>().UpdateSwitchList(false, newObject.GetComponent<Switch>().swtch);
+            }
+
+            if (GameObject.FindGameObjectWithTag("Player") == null)
+                GameObject.Instantiate(thePlayerPrefab, theLevelInfo.playerStartPosition, thePlayerPrefab.transform.rotation);
+            thePosPoints.positionPoint = theLevelInfo.playerStartPosition;
         }
 
-        //Deserialize JSON string for levers in scriptable object
-        Dictionary<string, List<string>> switchControlDict = new Dictionary<string, List<string>>();
-        switchControlDict = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(theLevelInfo.switchControlJSON);
-
-        //Instantiate lever, and add references obtained from json serialized object
-        foreach (KeyValuePair<string, List<string>> leverToRefs in switchControlDict)
-        {
-            string[] words = leverToRefs.Key.Split(':');
-            PositionRotationScale prs = new PositionRotationScale();
-            prs.position = getVector3(words[0]);
-            prs.rotation = getRotation3(words[1]);
-            prs.scaler = getVector3(words[2]);
-            GameObject newObject = GameObject.Instantiate(theLeverPrefab, prs.position, prs.rotation);
-            newObject.transform.localScale = prs.scaler;
-            newObject.GetComponent<Switch>().objTags = leverToRefs.Value;
-            newObject.GetComponent<Switch>().swtch = getSwtch(words[3]);
-            newObject.GetComponent<Switch>().UpdateSwitchList(false, newObject.GetComponent<Switch>().swtch);
-        }
-
-        if(GameObject.FindGameObjectWithTag("Player") == null)
-            GameObject.Instantiate(thePlayerPrefab, theLevelInfo.playerStartPosition, thePlayerPrefab.transform.rotation);
-        thePosPoints.positionPoint = theLevelInfo.playerStartPosition;
     }
 
     /// <summary>

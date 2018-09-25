@@ -349,7 +349,7 @@ Prefab:
     - target: {fileID: 114957859856137616, guid: a1654ca5d172fc34ca3dbe3d673c1645,
         type: 2}
       propertyPath: swtch
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 114957859856137616, guid: a1654ca5d172fc34ca3dbe3d673c1645,
         type: 2}
