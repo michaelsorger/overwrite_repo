@@ -29,6 +29,7 @@ public class ChestController : MonoBehaviour {
         if(theSmallInventory.keyList.Contains(key_required))
         {
             theSmallInventory.keyList.Add(this.gameObject.name);
+            GM.GetComponentInChildren<Spawner>().prefab = null;
             Destroy(this.gameObject);
         }
     }

@@ -2,7 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PathFollower : TriggersClass {
+public class PathFollower : MonoBehaviour {
+
+    /// <summary>
+    /// The condition to move
+    /// </summary>
+    public bool condition;
 
     /// <summary>
     /// Determines if deleted once reaching destination
@@ -20,6 +25,11 @@ public class PathFollower : TriggersClass {
     public int timeToBack;
 
     /// <summary>
+    /// Initial position of object
+    /// </summary>
+    public Vector3 ogPosition;
+
+    /// <summary>
     /// The position to move to
     /// </summary>
     public Vector3 moveTo;
@@ -34,27 +44,12 @@ public class PathFollower : TriggersClass {
     /// </summary>
     private bool startBack;
 
-    /// <summary>
-    /// Controls when the objects starts going to moveTo
-    /// </summary>
-    private bool start;
-
-    /// <summary>
-    /// Initial position of object
-    /// </summary>
-    Vector3 ogPosition;
-
-    private void Start()
-    {
-        ogPosition = transform.position;
-    }
-
-    // Update is called once per frame
-    void Update ()
+	// Update is called once per frame
+	void Update ()
     {
         if (startBack == true)
         {
-            trigger = false;
+            condition = false;
             transform.position = Vector3.MoveTowards(transform.position, ogPosition, speed);
             if (transform.position == ogPosition)
             {
@@ -62,7 +57,7 @@ public class PathFollower : TriggersClass {
             }
         }
 
-        if (start)
+        if (condition)
         {
             transform.position = Vector3.MoveTowards(transform.position, moveTo, speed);
             if (transform.position == moveTo && toDelete == true)
@@ -74,18 +69,13 @@ public class PathFollower : TriggersClass {
                 StartCoroutine(Wait());
             }
         }
-
-        else if (trigger)
-        {
-            start = trigger;
-        }
     }
 
     IEnumerator Wait()
     {
         yield return new WaitForSeconds(timeToBack);
         startBack = true;
-        start = false;
+        condition = false;
     }
 
     /// <summary>
