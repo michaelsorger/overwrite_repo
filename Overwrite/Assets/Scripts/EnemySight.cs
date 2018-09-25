@@ -142,6 +142,6 @@ public class EnemySight : MonoBehaviour {
     /// <returns></returns>
     Vector3 DirectionFromAngle(float angle)
     {
-        return new Vector3(0, Mathf.Sin(angle * Mathf.Deg2Rad), Mathf.Cos(angle * Mathf.Deg2Rad));
+        return new Vector3(Mathf.Sin(angle * Mathf.Deg2Rad), 0, Mathf.Cos(angle * Mathf.Deg2Rad));
     }
 }

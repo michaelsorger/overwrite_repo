@@ -9,4 +9,5 @@ public class PositionPoints : ScriptableObject
     /// The save point (add more to save point here i.e multiple saves might have a list of points)
     /// </summary>
     public Vector3 positionPoint;
+    public Quaternion rotationPoint;
 }

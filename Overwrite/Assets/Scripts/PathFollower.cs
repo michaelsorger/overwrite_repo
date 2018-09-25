@@ -27,7 +27,7 @@ public class PathFollower : MonoBehaviour {
     /// <summary>
     /// Initial position of object
     /// </summary>
-    public Vector3 ogPosition;
+    Vector3 ogPosition;
 
     /// <summary>
     /// The position to move to
@@ -44,8 +44,14 @@ public class PathFollower : MonoBehaviour {
     /// </summary>
     private bool startBack;
 
-	// Update is called once per frame
-	void Update ()
+
+    private void Start()
+    {
+        ogPosition = transform.position;
+    }
+
+    // Update is called once per frame
+    void Update ()
     {
         if (startBack == true)
         {

@@ -18,6 +18,11 @@ public class Spawner : MonoBehaviour {
     public Vector3 startPos;
 
     /// <summary>
+    /// The rotation to spawn
+    /// </summary>
+    public Quaternion startRot;
+
+    /// <summary>
     /// The rate at spawning
     /// </summary>
     public float spawnTime;
@@ -34,7 +39,7 @@ public class Spawner : MonoBehaviour {
     {
         if(prefab != null)
         {
-            GameObject obj = Instantiate(prefab, startPos, transform.rotation);
+            GameObject obj = Instantiate(prefab, startPos, startRot);
         }
         else
         {
