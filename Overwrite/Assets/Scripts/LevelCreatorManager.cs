@@ -71,9 +71,6 @@ public class LevelCreatorManager : MonoBehaviour {
             //Serialize levers with control information
             theLevelInfo.switchControlJSON = JsonConvert.SerializeObject(theSwtichControlDict);
 
-            //Add player start position to LevelInformation (can be overwritten)
-            theLevelInfo.playerStartPosition = GameObject.FindGameObjectWithTag("Player").transform.position;
-
             //Save ScriptableObject when we are done adding data
             EditorUtility.SetDirty(theLevelInfo);
             AssetDatabase.SaveAssets();
