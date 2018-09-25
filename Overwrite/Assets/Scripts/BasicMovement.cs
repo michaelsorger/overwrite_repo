@@ -18,9 +18,18 @@ public class BasicMovement : MonoBehaviour
 
         if (Input.GetKey("a"))
         {
-            pos.z += speed * Time.deltaTime;
+            pos.x -= speed * Time.deltaTime;
         }
         if (Input.GetKey("d"))
+        {
+            pos.x += speed * Time.deltaTime;
+        }
+
+        if (Input.GetKey("w"))
+        {
+            pos.z += speed * Time.deltaTime;
+        }
+        if (Input.GetKey("s"))
         {
             pos.z -= speed * Time.deltaTime;
         }
