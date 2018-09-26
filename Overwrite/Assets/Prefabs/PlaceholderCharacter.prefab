@@ -135,8 +135,8 @@ MonoBehaviour:
     type: 2}
   posPoints: {fileID: 11400000, guid: 01cc0803270c26a478145c877bb9f296, type: 2}
   saveGhost: {fileID: 1771691545273538, guid: 14ef7e5b02746f04f8e8f1936e7d3b2f, type: 2}
-  theTempLevel: {fileID: 11400000, guid: 0f4f2f858eb2590419920d5b67952bea, type: 2}
-  isDestroying: 0
+  theTempLevel: {fileID: 11400000, guid: bf10b5bb7fd9a624884c13da9aa2e3c3, type: 2}
+  inCorotine: 0
 --- !u!114 &114719608993133396
 MonoBehaviour:
   m_ObjectHideFlags: 1

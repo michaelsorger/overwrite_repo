@@ -13,14 +13,12 @@ public class Switch : MonoBehaviour {
     public List<string> objTags;
 
     /// <summary>
-    /// Switch on/off
+    /// Switch on/off, when in levelcreate scene, convention is to make this true
     /// </summary>
     public bool swtch;
 
     /// <summary>
     /// List of objects to manipulate, defined in levelcreate scene
-    /// Set this to true to have objects to manipulate be active in scene
-    /// Set this to false to have objects to manipulate be inactive in scene
     /// </summary>
     [SerializeField]
     private List<GameObject> objs;
@@ -37,14 +35,29 @@ public class Switch : MonoBehaviour {
         {
             for (int i = 0; i < objs.Count; i++)
             {
-                objs[i].transform.Rotate(Vector3.forward, 90);
+                if(objs[i].transform.position.y < 0)
+                {
+                    objs[i].transform.position += Vector3.up;
+                }
+                else
+                {
+                    objs[i].transform.position += Vector3.down;
+                }
+
             }
         }
         else
         {
             for (int i = 0; i < objs.Count; i++)
             {
-                objs[i].transform.Rotate(Vector3.forward, -90);
+                if (objs[i].transform.position.y < 0)
+                {
+                    objs[i].transform.position += Vector3.up;
+                }
+                else
+                {
+                    objs[i].transform.position += Vector3.down;
+                }
             }
         }
 	}
@@ -59,37 +72,28 @@ public class Switch : MonoBehaviour {
     }
 
     /// <summary>
-    /// If we have access to objects, then add to objtags list on serialization
-    /// If we dont have access to objects, then add to objs list on deserialization
+    /// Update list of GameObject references using tags defined from serialization
     /// </summary>
     /// <param name="hasObjects"></param>
     /// <param name="sw"></param>
-    public void UpdateSwitchList(bool hasObjects, bool sw)
+    public void UpdateSwitchObjRefList()
     {
-        if(hasObjects)
-        {
-            for (int i = 0; i < objs.Count; i++)
+        for (int i = 0; i < objTags.Count; i++)
+        {   
+            //set each found obj to false, otherwise infinite loop
+            while(GameObject.FindWithTag(objTags[i]) != null)
             {
-                objTags.Add(objs[i].tag);
+                GameObject go = GameObject.FindWithTag(objTags[i]);
+                objs.Add(go);
+                go.SetActive(false);
             }
         }
-        else
+
+        //Make obj visible again
+        for (int i = 0; i < objs.Count; i++)
         {
-            for (int i = 0; i < objTags.Count; i++)
-            {
-                while(GameObject.FindWithTag(objTags[i]) != null)
-                {
-                    GameObject go = GameObject.FindWithTag(objTags[i]);
-                    objs.Add(go);
-                    go.SetActive(false);
-                }
-            }
-            for (int i = 0; i < objs.Count; i++)
-            {
-                objs[i].SetActive(true);
-            }
-        }
-    
+            objs[i].SetActive(true);
+        }  
     }
 
     // Update is called once per frame
@@ -99,8 +103,8 @@ public class Switch : MonoBehaviour {
         {
             if (Input.GetKeyDown("e"))
             {
-                swtch = !swtch;
                 GetCondition();
+                swtch = !swtch;
             }
         }
     }

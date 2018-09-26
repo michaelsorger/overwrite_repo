@@ -26,11 +26,6 @@ public class PlayerController : MonoBehaviour {
     /// </summary>
     public GameObject saveGhost;
 
-    /// <summary>
-    /// The scriptable object to change, save, and load from
-    /// </summary>
-    public LevelInformation theTempLevel;
-
     public bool inCorotine = false;
 
     // Use this for initialization
@@ -55,15 +50,15 @@ public class PlayerController : MonoBehaviour {
                 this.gameObject.transform.rotation = posPoints.rotationPoint;
             }
         }
-        else if(Input.GetButton("SaveWorld"))
+        else if(Input.GetButtonDown("SaveWorld"))
         {
-            theTempLevel = LevelCreatorManager.SerializeLevelIntoScriptObj(theTempLevel);
+            GameManager.theTempLevel = LevelCreatorManager.SerializeLevelIntoScriptObj(GameManager.theTempLevel);
         }
         else if(Input.GetButton("LoadWorld"))
         {
             if(!inCorotine)
             {
-                Debug.Log("Called me!");
+                Debug.Log("PlayerController LoadWorld, StartCoroutine");
                 StartCoroutine(LoadWorld());
             }
 
@@ -83,9 +78,12 @@ public class PlayerController : MonoBehaviour {
         DestroyObjectsWithTag("Lever");
         DestroyObjectsWithTag("Lever_0");
         DestroyObjectsWithTag("Lever_1");
-        yield return new WaitForSeconds(2);
-        GameManager.DeserializeFromScriptObj(theTempLevel, theWallPrefab, theDoorPrefab, thePlayerPrefab, theLeverPrefab, posPoints);
+        DestroyObjectsWithTag("Lever_2");
+        DestroyObjectsWithTag("Lever_3");
+        yield return new WaitForSeconds(1);
+        GameManager.DeserializeFromScriptObj(GameManager.theTempLevel, theWallPrefab, theDoorPrefab, thePlayerPrefab, theLeverPrefab, posPoints);
         inCorotine = false;
+        Debug.Log("World loaded");
     }
 
     /// <summary>

@@ -28,8 +28,14 @@ public class LevelCreatorManager : MonoBehaviour {
     {
         if (theLevelInfo != null)
         {
+            Debug.Log("Serializing " + theLevelInfo.name + " into scriptable object");
             Dictionary<string, List<string>> tagGameObjectMap = new Dictionary<string, List<string>>();
             Dictionary<string, List<string>> theSwtichControlDict = new Dictionary<string, List<string>>();
+
+            if(theLevelInfo.tagList.Count < 1)
+            {
+                Debug.Log("Forgot to type tags in! Type the tags you used for each item to be serialized");
+            }
 
             foreach (string t in theLevelInfo.tagList)
             {
@@ -70,6 +76,12 @@ public class LevelCreatorManager : MonoBehaviour {
 
             //Serialize levers with control information
             theLevelInfo.switchControlJSON = JsonConvert.SerializeObject(theSwtichControlDict);
+
+            //Only in level creation, don't set playerStartPosition again
+            if(GameObject.FindGameObjectWithTag("PlayerStartPosition") != null)
+            {
+                theLevelInfo.playerStartPosition = GameObject.FindGameObjectWithTag("PlayerStartPosition").gameObject.transform.position;
+            }
 
             //Save ScriptableObject when we are done adding data
             EditorUtility.SetDirty(theLevelInfo);

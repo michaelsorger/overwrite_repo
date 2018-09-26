@@ -47,7 +47,11 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private PositionPoints thePosPoints;
 
-    private int badCounter = 0;
+    /// <summary>
+    /// The scriptable object to change, save, and load from
+    /// other scripts can reference this if changes are needed
+    /// </summary>
+    public static LevelInformation theTempLevel;
 
     void Start()
     {
@@ -57,67 +61,89 @@ public class GameManager : MonoBehaviour
             if(LvlInfo.name.Equals(theLevelToPlay))
             {
                 DeserializeFromScriptObj(LvlInfo, theWallPrefab, theDoorPrefab, thePlayerPrefab, theLeverPrefab, thePosPoints);
+                theTempLevel = new LevelInformation();
+                theTempLevel.tagList = LvlInfo.tagList;
+                theTempLevel.tagGameObjectListJSON = LvlInfo.tagGameObjectListJSON;
+                theTempLevel.switchControlJSON = LvlInfo.switchControlJSON;
+                theTempLevel.playerStartPosition = LvlInfo.playerStartPosition;
+
                 break;
             }
         }
     }
 
+    /// <summary>
+    /// Deserializes the scriptable object and instantiates each object by its tag into the level
+    /// </summary>
+    /// <param name="theLevelInfo"></param>
+    /// <param name="theWallPrefab"></param>
+    /// <param name="theDoorPrefab"></param>
+    /// <param name="thePlayerPrefab"></param>
+    /// <param name="theLeverPrefab"></param>
+    /// <param name="thePosPoints"></param>
     public static void DeserializeFromScriptObj(LevelInformation theLevelInfo, GameObject theWallPrefab, GameObject theDoorPrefab,
         GameObject thePlayerPrefab, GameObject theLeverPrefab, PositionPoints thePosPoints)
     {
-        //Deserialize JSON string for simple objects in scriptable object
-        Dictionary<string, List<string>> tagGameObjMap = new Dictionary<string, List<string>>();
-        tagGameObjMap = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(theLevelInfo.tagGameObjectListJSON);
-
-        if(!string.IsNullOrEmpty(theLevelInfo.tagGameObjectListJSON) || !string.IsNullOrEmpty(theLevelInfo.switchControlJSON))
+        if(theLevelInfo != null)
         {
-            foreach (KeyValuePair<string, List<string>> tagToObjList in tagGameObjMap)
+            Debug.Log("Deserializing " + theLevelInfo.name + " scriptable object and instantiating the following:");
+
+            //Deserialize JSON string for simple objects in scriptable object
+            Dictionary<string, List<string>> tagGameObjMap = new Dictionary<string, List<string>>();
+            tagGameObjMap = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(theLevelInfo.tagGameObjectListJSON);
+
+            if (!string.IsNullOrEmpty(theLevelInfo.tagGameObjectListJSON) || !string.IsNullOrEmpty(theLevelInfo.switchControlJSON))
             {
-                Debug.Log(tagToObjList.Key + " in DeserializeFromScriptObj");
-                switch (tagToObjList.Key)
+                foreach (KeyValuePair<string, List<string>> tagToObjList in tagGameObjMap)
                 {
-                    case "Wall":
-                        foreach (string s in tagToObjList.Value)
-                        {
-                            InstantiateSimplePrefab(theWallPrefab, tagToObjList.Key, s);
-                        }
-                        break;
-                    case "Lever_0":
-                    case "Lever_1":
-                    case "Lever_2":
-                    case "Lever_3":
-                        foreach (string s in tagToObjList.Value)
-                        {
-                            InstantiateSimplePrefab(theDoorPrefab, tagToObjList.Key, s);
-                        }
-                        break;
+                    Debug.Log("Each gameobject with tag = " + tagToObjList.Key);
+                    switch (tagToObjList.Key)
+                    {
+                        case "Wall":
+                            foreach (string s in tagToObjList.Value)
+                            {
+                                InstantiateSimplePrefab(theWallPrefab, tagToObjList.Key, s);
+                            }
+                            break;
+                        case "Lever_0":
+                        case "Lever_1":
+                        case "Lever_2":
+                        case "Lever_3":
+                            foreach (string s in tagToObjList.Value)
+                            {
+                                InstantiateSimplePrefab(theDoorPrefab, tagToObjList.Key, s);
+                            }
+                            break;
+                    }
+                }
+
+                //Deserialize JSON string for levers in scriptable object
+                Dictionary<string, List<string>> switchControlDict = new Dictionary<string, List<string>>();
+                switchControlDict = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(theLevelInfo.switchControlJSON);
+
+                //Instantiate lever, and add references obtained from json serialized object
+                foreach (KeyValuePair<string, List<string>> switchToRefs in switchControlDict)
+                {
+                    string[] words = switchToRefs.Key.Split(':');
+                    PositionRotationScale prs = new PositionRotationScale();
+                    prs.position = getVector3(words[0]);
+                    prs.rotation = getRotation3(words[1]);
+                    prs.scaler = getVector3(words[2]);
+                    GameObject newObject = GameObject.Instantiate(theLeverPrefab, prs.position, prs.rotation);
+                    newObject.transform.localScale = prs.scaler;
+                    newObject.GetComponent<Switch>().objTags = switchToRefs.Value;
+                    newObject.GetComponent<Switch>().swtch = getBool(words[3]);
+                    newObject.GetComponent<Switch>().UpdateSwitchObjRefList();
+                }
+
+                GameObject go = GameObject.FindGameObjectWithTag("Player");
+                if (!go)
+                {
+                    GameObject.Instantiate(thePlayerPrefab, theLevelInfo.playerStartPosition, thePlayerPrefab.transform.rotation);
+                    thePosPoints.positionPoint = theLevelInfo.playerStartPosition;
                 }
             }
-
-            //Deserialize JSON string for levers in scriptable object
-            Dictionary<string, List<string>> switchControlDict = new Dictionary<string, List<string>>();
-            switchControlDict = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(theLevelInfo.switchControlJSON);
-
-            //Instantiate lever, and add references obtained from json serialized object
-            foreach (KeyValuePair<string, List<string>> leverToRefs in switchControlDict)
-            {
-                string[] words = leverToRefs.Key.Split(':');
-                PositionRotationScale prs = new PositionRotationScale();
-                prs.position = getVector3(words[0]);
-                prs.rotation = getRotation3(words[1]);
-                prs.scaler = getVector3(words[2]);
-                GameObject newObject = GameObject.Instantiate(theLeverPrefab, prs.position, prs.rotation);
-                newObject.transform.localScale = prs.scaler;
-                newObject.GetComponent<Switch>().objTags = leverToRefs.Value;
-                newObject.GetComponent<Switch>().swtch = getSwtch(words[3]);
-                newObject.GetComponent<Switch>().UpdateSwitchList(false, newObject.GetComponent<Switch>().swtch);
-            }
-
-            if (GameObject.FindGameObjectWithTag("Player") == null)
-                GameObject.Instantiate(thePlayerPrefab, theLevelInfo.playerStartPosition, thePlayerPrefab.transform.rotation);
-            thePosPoints.positionPoint = theLevelInfo.playerStartPosition;
-        }
-
+        }      
     }
 
     /// <summary>
@@ -125,7 +151,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     /// <param name="sString"></param>
     /// <returns></returns>
-    public static bool getSwtch(string sString)
+    public static bool getBool(string sString)
     {
         bool ret;
         if(sString.Equals("true"))
