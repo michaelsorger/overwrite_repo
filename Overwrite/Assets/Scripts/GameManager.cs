@@ -97,6 +97,8 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public static LevelInformation theTempLevel;
 
+    private static bool EnemySpawned;
+
     void Start()
     {
         //Assign static's so scripts can access properties when needed
@@ -108,8 +110,10 @@ public class GameManager : MonoBehaviour
         StaticPositionPoints = thePosPoints;
         StaticSpikePrefab = theSpikePrefab;
 
+        EnemySpawned = false;
+
         //Loop through all the levels, and instantiate the level set by a string matching a script obj level name
-        foreach(LevelInformation LvlInfo in theLevelBank)
+        foreach (LevelInformation LvlInfo in theLevelBank)
         {
             if(LvlInfo.name.Equals(theLevelToPlay))
             {
@@ -208,13 +212,14 @@ public class GameManager : MonoBehaviour
                             break;
                         case "Enemy":
                             GameObject enemyObjCheck = GameObject.FindGameObjectWithTag("Enemy");
-                            if(!enemyObjCheck)
+                            if(!enemyObjCheck && EnemySpawned == false)
                             {
                                 foreach (string s in tagToObjList.Value)
                                 {
                                     GameObject enemyObj = InstantiateSimplePrefab(StaticEnemyPrefab, tagToObjList.Key, s);
                                     enemyObj.GetComponent<EnemyAI>().player = GameObject.FindGameObjectWithTag("Player");
                                 }
+                                EnemySpawned = true;
                             }
                             break;
                         case "Spikes_0":
