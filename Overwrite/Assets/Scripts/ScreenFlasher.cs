@@ -18,7 +18,10 @@ public class ScreenFlasher : MonoBehaviour
     public void OnButtonClick()
     {
         StartCoroutine(FadeImage(true));
-        buttonNoise.Play();
+        if(buttonNoise != null)
+        {
+            buttonNoise.Play();
+        }
     }
 
     IEnumerator FadeImage(bool fadeAway)

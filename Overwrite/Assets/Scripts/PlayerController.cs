@@ -16,6 +16,7 @@ public class PlayerController : MonoBehaviour {
     // Use this for initialization
     void Start () {
         saveGhost = Instantiate(saveGhost, transform.position, transform.rotation);
+
     }
 	
 	// Update is called once per frame
@@ -44,19 +45,19 @@ public class PlayerController : MonoBehaviour {
 
     public void SavePosition()
     {
-            GameManager.StaticPositionPoints.positionPoint = this.gameObject.transform.position;
-            GameManager.StaticPositionPoints.rotationPoint = this.gameObject.transform.rotation;
-            saveGhost.transform.position = gameObject.transform.position;
-            saveGhost.transform.rotation = gameObject.transform.rotation;
+        GameManager.StaticPositionPoints.positionPoint = this.gameObject.transform.position;
+        GameManager.StaticPositionPoints.rotationPoint = this.gameObject.transform.rotation;
+        saveGhost.transform.position = gameObject.transform.position;
+        saveGhost.transform.rotation = gameObject.transform.rotation;
     }
 
     public void LoadPosition()
     {
-            if(GameManager.StaticPositionPoints.positionPoint != null)
-            {
-                this.gameObject.transform.position = GameManager.StaticPositionPoints.positionPoint;
-                this.gameObject.transform.rotation = GameManager.StaticPositionPoints.rotationPoint;
-            }
+        if(GameManager.StaticPositionPoints.positionPoint != null)
+        {
+            this.gameObject.transform.position = GameManager.StaticPositionPoints.positionPoint;
+            this.gameObject.transform.rotation = GameManager.StaticPositionPoints.rotationPoint;
+        }
     }
 
 
@@ -89,8 +90,10 @@ public class PlayerController : MonoBehaviour {
         DestroyObjectsWithTag("Lever_1");
         DestroyObjectsWithTag("Lever_2");
         DestroyObjectsWithTag("Lever_3");
-        yield return new WaitForSeconds(1);
+        StopEnemyMovement();
+        yield return new WaitForSeconds(.5f);
         GameManager.DeserializeFromScriptObj(GameManager.theTempLevel);
+        StartEnemyMovement();
         inCorotine = false;
         Debug.Log("World loaded");
     }
@@ -105,6 +108,24 @@ public class PlayerController : MonoBehaviour {
         foreach(GameObject g in gos)
         {
             Destroy(g);
+        }
+    }
+
+    void StopEnemyMovement()
+    {
+        GameObject[] gos = GameObject.FindGameObjectsWithTag("Enemy");
+        foreach(GameObject go in gos)
+        {
+            go.GetComponent<EnemyAI>().speed = 0f;
+        }
+    }
+
+    void StartEnemyMovement()
+    {
+        GameObject[] gos = GameObject.FindGameObjectsWithTag("Enemy");
+        foreach (GameObject go in gos)
+        {
+            go.GetComponent<EnemyAI>().speed = 0.05f;
         }
     }
 }

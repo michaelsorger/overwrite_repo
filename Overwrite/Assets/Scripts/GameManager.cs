@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Newtonsoft.Json;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -60,6 +61,30 @@ public class GameManager : MonoBehaviour
     public static PositionPoints StaticPositionPoints;
 
     /// <summary>
+    /// The save world button
+    /// </summary>
+    [SerializeField]
+    private Button theSaveWorldButton;
+
+    /// <summary>
+    /// The load world button
+    /// </summary>
+    [SerializeField]
+    private Button theLoadWorldButton;
+
+    /// <summary>
+    /// The save position button
+    /// </summary>
+    [SerializeField]
+    private Button theSavePositionButton;
+
+    /// <summary>
+    /// The load position button
+    /// </summary>
+    [SerializeField]
+    private Button theLoadPositionButton;
+
+    /// <summary>
     /// The scriptable object to change, save, and load from
     /// other scripts can reference this if changes are needed
     /// </summary>
@@ -80,7 +105,10 @@ public class GameManager : MonoBehaviour
         {
             if(LvlInfo.name.Equals(theLevelToPlay))
             {
+                //Deserialize level
                 DeserializeFromScriptObj(LvlInfo);
+
+                //Update temp script obj with level
                 theTempLevel = new LevelInformation();
                 theTempLevel.tagList = LvlInfo.tagList;
                 theTempLevel.tagGameObjectListJSON = LvlInfo.tagGameObjectListJSON;
@@ -88,9 +116,35 @@ public class GameManager : MonoBehaviour
                 theTempLevel.oneWaySwitcherControlJSON = LvlInfo.oneWaySwitcherControlJSON;
                 theTempLevel.playerStartPosition = LvlInfo.playerStartPosition;
 
+                //Update ui buttons to map to player
+                theSaveWorldButton.GetComponent<Button>().onClick.AddListener(CallSaveWorld);
+                theLoadWorldButton.GetComponent<Button>().onClick.AddListener(CallLoadWorld);
+                theSavePositionButton.GetComponent<Button>().onClick.AddListener(CallSavePosition);
+                theLoadPositionButton.GetComponent<Button>().onClick.AddListener(CallLoadPosition);
+
                 break;
             }
         }
+    }
+
+    /// <summary>
+    /// Ui button functionality for player
+    /// </summary>
+    private void CallSaveWorld()
+    {
+        GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().SaveWorld();
+    }
+    private void CallLoadWorld()
+    {
+        GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().LoadWorldHelper();
+    }
+    private void CallSavePosition()
+    {
+        GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().SavePosition();
+    }
+    private void CallLoadPosition()
+    {
+        GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().LoadPosition();
     }
 
     /// <summary>
