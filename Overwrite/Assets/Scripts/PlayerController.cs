@@ -7,21 +7,6 @@ using UnityEngine.SceneManagement;
 public class PlayerController : MonoBehaviour {
 
     /// <summary>
-    /// I suck and am running out of time
-    /// References to all the prefabs needed to reinstantiate an entire level
-    /// </summary>
-    public GameObject theWallPrefab;
-    public GameObject theDoorPrefab;
-    public GameObject thePlayerPrefab;
-    public GameObject theLeverPrefab;
-
-    /// <summary>
-    /// The scriptable object representing save position points
-    /// </summary>
-    [SerializeField]
-    private PositionPoints posPoints;
-
-    /// <summary>
     /// Ghost object used to show the player's saved position
     /// </summary>
     public GameObject saveGhost;
@@ -37,11 +22,15 @@ public class PlayerController : MonoBehaviour {
 	void Update () {
 		if(Input.GetButtonDown("SavePosition"))
         {
+
             SavePosition();
+
         }
         else if(Input.GetButton("Teleport"))
         {
+
             LoadPosition();
+
         }
         else if(Input.GetButtonDown("SaveWorld"))
         {
@@ -55,19 +44,19 @@ public class PlayerController : MonoBehaviour {
 
     public void SavePosition()
     {
-        posPoints.positionPoint = this.gameObject.transform.position;
-        posPoints.rotationPoint = this.gameObject.transform.rotation;
-        saveGhost.transform.position = gameObject.transform.position;
-        saveGhost.transform.rotation = gameObject.transform.rotation;
+            GameManager.StaticPositionPoints.positionPoint = this.gameObject.transform.position;
+            GameManager.StaticPositionPoints.rotationPoint = this.gameObject.transform.rotation;
+            saveGhost.transform.position = gameObject.transform.position;
+            saveGhost.transform.rotation = gameObject.transform.rotation;
     }
 
     public void LoadPosition()
     {
-        if (posPoints.positionPoint != null)
-        {
-            this.gameObject.transform.position = posPoints.positionPoint;
-            this.gameObject.transform.rotation = posPoints.rotationPoint;
-        }
+            if(GameManager.StaticPositionPoints.positionPoint != null)
+            {
+                this.gameObject.transform.position = GameManager.StaticPositionPoints.positionPoint;
+                this.gameObject.transform.rotation = GameManager.StaticPositionPoints.rotationPoint;
+            }
     }
 
 
@@ -95,13 +84,13 @@ public class PlayerController : MonoBehaviour {
     {
         inCorotine = true;
         DestroyObjectsWithTag("Wall");
-        DestroyObjectsWithTag("Lever");
+        DestroyObjectsWithTag("Switcher");
         DestroyObjectsWithTag("Lever_0");
         DestroyObjectsWithTag("Lever_1");
         DestroyObjectsWithTag("Lever_2");
         DestroyObjectsWithTag("Lever_3");
         yield return new WaitForSeconds(1);
-        GameManager.DeserializeFromScriptObj(GameManager.theTempLevel, theWallPrefab, theDoorPrefab, thePlayerPrefab, theLeverPrefab, posPoints);
+        GameManager.DeserializeFromScriptObj(GameManager.theTempLevel);
         inCorotine = false;
         Debug.Log("World loaded");
     }

@@ -8,14 +8,14 @@ using UnityEngine;
 public class Switch : MonoBehaviour {
 
     /// <summary>
-    /// Game objects by tag being affected by switch
-    /// </summary>
-    public List<string> objTags;
-
-    /// <summary>
     /// Switch on/off, when in levelcreate scene, convention is to make this true
     /// </summary>
     public bool swtch;
+
+    /// <summary>
+    /// Game objects by this specified tag to be affected by switch
+    /// </summary>
+    public string objTag;
 
     /// <summary>
     /// List of objects to manipulate, defined in levelcreate scene
@@ -37,11 +37,11 @@ public class Switch : MonoBehaviour {
             {
                 if(objs[i].transform.position.y < 0)
                 {
-                    objs[i].transform.position += Vector3.up;
+                    objs[i].transform.position += Vector3.up*3;
                 }
                 else
                 {
-                    objs[i].transform.position += Vector3.down;
+                    objs[i].transform.position += Vector3.down*3;
                 }
 
             }
@@ -52,11 +52,11 @@ public class Switch : MonoBehaviour {
             {
                 if (objs[i].transform.position.y < 0)
                 {
-                    objs[i].transform.position += Vector3.up;
+                    objs[i].transform.position += Vector3.up*3;
                 }
                 else
                 {
-                    objs[i].transform.position += Vector3.down;
+                    objs[i].transform.position += Vector3.down*3;
                 }
             }
         }
@@ -77,18 +77,14 @@ public class Switch : MonoBehaviour {
     /// <param name="hasObjects"></param>
     /// <param name="sw"></param>
     public void UpdateSwitchObjRefList()
-    {
-        for (int i = 0; i < objTags.Count; i++)
-        {   
-            //set each found obj to false, otherwise infinite loop
-            while(GameObject.FindWithTag(objTags[i]) != null)
-            {
-                GameObject go = GameObject.FindWithTag(objTags[i]);
-                objs.Add(go);
-                go.SetActive(false);
-            }
+    {  
+        //set each found obj to false, otherwise infinite loop
+        while(GameObject.FindWithTag(objTag) != null)
+        {
+            GameObject go = GameObject.FindWithTag(objTag);
+            objs.Add(go);
+            go.SetActive(false);
         }
-
         //Make obj visible again
         for (int i = 0; i < objs.Count; i++)
         {

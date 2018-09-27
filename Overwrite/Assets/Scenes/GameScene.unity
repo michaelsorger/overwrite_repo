@@ -143,7 +143,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4487027861532326, guid: 3749c48fe69dfc64391fa66852787944, type: 2}
       propertyPath: m_LocalPosition.y
-      value: -0.1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4487027861532326, guid: 3749c48fe69dfc64391fa66852787944, type: 2}
       propertyPath: m_LocalPosition.z
@@ -208,11 +208,13 @@ MonoBehaviour:
   - {fileID: 11400000, guid: d14a5906ab44f1742887cb6ebab91e66, type: 2}
   theWallPrefab: {fileID: 1699032890767378, guid: 002722c38e0e5b149a536d5985fea438,
     type: 2}
-  thePlayerPrefab: {fileID: 1949988958154286, guid: 7f3a23674c71c1b4a8ac0e66e80cd64f,
+  thePlayerPrefab: {fileID: 1035129149684466, guid: 452deb2e8d9ca81449a20577422edce6,
     type: 2}
   theDoorPrefab: {fileID: 1909441792266344, guid: 32c316fdffc418c42a23d4d38bbb4934,
     type: 2}
   theLeverPrefab: {fileID: 1346577585046410, guid: a1654ca5d172fc34ca3dbe3d673c1645,
+    type: 2}
+  theEnemyPrefab: {fileID: 1792834153398374, guid: 015bee3929c446045b87c94ca3f20865,
     type: 2}
   thePosPoints: {fileID: 11400000, guid: 01cc0803270c26a478145c877bb9f296, type: 2}
 --- !u!4 &792215190
