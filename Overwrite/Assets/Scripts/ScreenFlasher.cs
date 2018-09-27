@@ -14,8 +14,6 @@ public class ScreenFlasher : MonoBehaviour
     {
         // fades the image out when you click
         StartCoroutine(FadeImage(true));
-        Wait();
-
     }
 
     IEnumerator FadeImage(bool fadeAway)
@@ -30,25 +28,13 @@ public class ScreenFlasher : MonoBehaviour
                 yield return null;
             }
             // loop over 1 second backwards
-
-        }
-    }
-
-    IEnumerable FadeInImage(bool fadeAway)
-    {
-        if (fadeAway)
-        {
             for (float i = 1; i >= 0; i -= Time.deltaTime)
             {
                 // set color with i as alpha
                 img.color = new Color(1, 1, 1, i);
                 yield return null;
             }
-        }
-    }
 
-    IEnumerator Wait()
-    {
-        yield return new WaitForSeconds(fadeOutTime);
+        }
     }
 }
