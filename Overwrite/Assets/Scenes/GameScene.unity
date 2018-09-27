@@ -1000,9 +1000,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e3d3291620d20a4e88a1ae009dc2135, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  theLevelToPlay: Level_Easy_Demo
+  theLevelToPlay: Level_Hard_Demo
   theLevelBank:
-  - {fileID: 11400000, guid: d14a5906ab44f1742887cb6ebab91e66, type: 2}
+  - {fileID: 11400000, guid: d12e8117771c91547b482f88ca0aef9c, type: 2}
   theWallPrefab: {fileID: 1699032890767378, guid: 002722c38e0e5b149a536d5985fea438,
     type: 2}
   thePlayerPrefab: {fileID: 1035129149684466, guid: 452deb2e8d9ca81449a20577422edce6,
@@ -1271,13 +1271,13 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1053873684}
-  m_LocalRotation: {x: 0.53729963, y: 0, z: 0, w: 0.8433915}
-  m_LocalPosition: {x: 0, y: 12, z: -8}
+  m_LocalRotation: {x: 0.60876137, y: 0, z: 0, w: 0.7933534}
+  m_LocalPosition: {x: 0, y: 14, z: -5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 65, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 75, y: 0, z: 0}
 --- !u!1 &1135048621
 GameObject:
   m_ObjectHideFlags: 0
