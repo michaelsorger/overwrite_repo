@@ -30,7 +30,7 @@ public class LevelCreatorManager : MonoBehaviour {
         {
             Debug.Log("Serializing " + theLevelInfo.name + " into scriptable object");
             Dictionary<string, List<string>> tagGameObjectMap = new Dictionary<string, List<string>>();
-            Dictionary<string, List<string>> theSwtichControlDict = new Dictionary<string, List<string>>();
+            Dictionary<string, string> theSwtichControlDict = new Dictionary<string, string>();
 
             if(theLevelInfo.tagList.Count < 1)
             {
@@ -42,25 +42,29 @@ public class LevelCreatorManager : MonoBehaviour {
                 GameObject[] t_arr = GameObject.FindGameObjectsWithTag(t);
                 switch(t)
                 {
-                    case "Lever":
-                        //Add levers, and reference to levers
+                    case "Switcher":
+                        //Add switcher and its position, and what tag switcher references
+                        //Serialized in form: [name:pos:rot:scale , tag I reference]
+                        //For example: [Lever:0:0:0 , "Lever_0"}
                         foreach (GameObject l in t_arr)
                         {
                             PositionRotationScale prs = new PositionRotationScale();
                             prs.position = l.transform.position;
                             prs.rotation = l.transform.rotation;
                             prs.scaler = l.transform.localScale;
-                            string key_string = prs.position.ToString() + ":" + prs.rotation.ToString() + ":" + prs.scaler.ToString() + ":" + l.GetComponent<Switch>().swtch.ToString().ToLower();
-                            List<string> tagList = l.GetComponent<Switch>().objTags;
-                            theSwtichControlDict.Add(key_string, tagList);
+                            string key_string = l.name + ":" + prs.position.ToString() + ":" + prs.rotation.ToString() + ":" + prs.scaler.ToString();
+                            string tagToRef = l.GetComponent<Switch>().objTag;
+                            theSwtichControlDict.Add(key_string, tagToRef);
                         }
                         break;
-
                     case "Wall":
                     case "Lever_0":
                     case "Lever_1":
                     case "Lever_2":
-                    case "Lever_3":
+                    case "Lever_3":                    
+                    case "Enemy":
+                        //Serialized in form = [tag , pos:rot:scale]
+                        //For example: [Lever_0 , 5:5:5]
                         foreach (GameObject go in t_arr)
                         {
                             LevelCreatorManager.SimpleAddToTagGameObjectMap(tagGameObjectMap, t, go);
@@ -73,9 +77,10 @@ public class LevelCreatorManager : MonoBehaviour {
 
             //Serialize simple walls and doors with name and position information
             theLevelInfo.tagGameObjectListJSON = JsonConvert.SerializeObject(tagGameObjectMap);
+            Debug.Log(theLevelInfo.tagGameObjectListJSON);
 
             //Serialize levers with control information
-            theLevelInfo.switchControlJSON = JsonConvert.SerializeObject(theSwtichControlDict);
+            theLevelInfo.switcherControlJSON = JsonConvert.SerializeObject(theSwtichControlDict);
 
             //Only in level creation, don't set playerStartPosition again
             if(GameObject.FindGameObjectWithTag("PlayerStartPosition") != null)
@@ -110,9 +115,9 @@ public class LevelCreatorManager : MonoBehaviour {
 
         if (!tagMap.ContainsKey(tagKeyToAdd))
         {
-            List<string> wallPrsList = new List<string>();
-            wallPrsList.Add(val_string);
-            tagMap.Add(tagKeyToAdd, wallPrsList);
+            List<string> prsList = new List<string>();
+            prsList.Add(val_string);
+            tagMap.Add(tagKeyToAdd, prsList);
         }
         else
         {

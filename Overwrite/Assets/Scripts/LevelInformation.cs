@@ -11,7 +11,8 @@ public class LevelInformation : ScriptableObject
 {
     public List<string> tagList;
     public string tagGameObjectListJSON;
-    public string switchControlJSON;
+    public string switcherControlJSON;
+    public string oneWaySwitcherControlJSON;
     public Vector3 playerStartPosition;
 }
 

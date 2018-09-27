@@ -14,6 +14,7 @@ TagManager:
   - Lever_1
   - Lever_2
   - Lever_3
+  - Switcher
   layers:
   - Default
   - TransparentFX
