@@ -54,6 +54,13 @@ public class GameManager : MonoBehaviour
     public static GameObject StaticEnemyPrefab;
 
     /// <summary>
+    /// The lever prefab
+    /// </summary>
+    [SerializeField]
+    private GameObject theSpikePrefab;
+    public static GameObject StaticSpikePrefab;
+
+    /// <summary>
     /// The script obj holding data to teleport to
     /// </summary>
     [SerializeField]
@@ -99,6 +106,7 @@ public class GameManager : MonoBehaviour
         StaticLeverPrefab = theLeverPrefab;
         StaticEnemyPrefab = theEnemyPrefab;
         StaticPositionPoints = thePosPoints;
+        StaticSpikePrefab = theSpikePrefab;
 
         //Loop through all the levels, and instantiate the level set by a string matching a script obj level name
         foreach(LevelInformation LvlInfo in theLevelBank)
@@ -207,6 +215,12 @@ public class GameManager : MonoBehaviour
                                     GameObject enemyObj = InstantiateSimplePrefab(StaticEnemyPrefab, tagToObjList.Key, s);
                                     enemyObj.GetComponent<EnemyAI>().player = GameObject.FindGameObjectWithTag("Player");
                                 }
+                            }
+                            break;
+                        case "Spikes_0":
+                            foreach (string s in tagToObjList.Value)
+                            {
+                                InstantiateSimplePrefab(StaticSpikePrefab, tagToObjList.Key, s);
                             }
                             break;
                     }

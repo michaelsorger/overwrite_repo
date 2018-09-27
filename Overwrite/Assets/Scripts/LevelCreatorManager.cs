@@ -63,6 +63,8 @@ public class LevelCreatorManager : MonoBehaviour {
                     case "Lever_2":
                     case "Lever_3":                    
                     case "Enemy":
+                    case "Spikes_0":
+                    case "Spikes_1":
                         //Serialized in form = [tag , pos:rot:scale]
                         //For example: [Lever_0 , 5:5:5]
                         foreach (GameObject go in t_arr)

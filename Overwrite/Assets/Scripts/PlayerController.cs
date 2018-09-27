@@ -90,9 +90,11 @@ public class PlayerController : MonoBehaviour {
         DestroyObjectsWithTag("Lever_1");
         DestroyObjectsWithTag("Lever_2");
         DestroyObjectsWithTag("Lever_3");
+        DestroyObjectsWithTag("Spikes_0");
         StopEnemyMovement();
-        yield return new WaitForSeconds(.5f);
+        yield return new WaitForSeconds(1f);
         GameManager.DeserializeFromScriptObj(GameManager.theTempLevel);
+        yield return new WaitForSeconds(.5f);
         StartEnemyMovement();
         inCorotine = false;
         Debug.Log("World loaded");

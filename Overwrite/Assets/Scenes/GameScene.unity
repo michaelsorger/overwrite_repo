@@ -1013,6 +1013,8 @@ MonoBehaviour:
     type: 2}
   theEnemyPrefab: {fileID: 1792834153398374, guid: 015bee3929c446045b87c94ca3f20865,
     type: 2}
+  theSpikePrefab: {fileID: 1982681393515974, guid: 51e538999b86be7449aa9c07be478c4a,
+    type: 2}
   thePosPoints: {fileID: 11400000, guid: 01cc0803270c26a478145c877bb9f296, type: 2}
   theSaveWorldButton: {fileID: 616330915}
   theLoadWorldButton: {fileID: 1698972970}
@@ -1107,7 +1109,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   img: {fileID: 863975888}
   buttonNoise: {fileID: 0}
-  fadeOutTime: 2
+  fadeOutTime: 1
 --- !u!222 &863975890
 CanvasRenderer:
   m_ObjectHideFlags: 0
