@@ -37,33 +37,53 @@ public class PlayerController : MonoBehaviour {
 	void Update () {
 		if(Input.GetButtonDown("SavePosition"))
         {
-            posPoints.positionPoint = this.gameObject.transform.position;
-            posPoints.rotationPoint = this.gameObject.transform.rotation;
-            saveGhost.transform.position = gameObject.transform.position;
-            saveGhost.transform.rotation = gameObject.transform.rotation;
+            SavePosition();
         }
         else if(Input.GetButton("Teleport"))
         {
-            if(posPoints.positionPoint != null)
-            {
-                this.gameObject.transform.position = posPoints.positionPoint;
-                this.gameObject.transform.rotation = posPoints.rotationPoint;
-            }
+            LoadPosition();
         }
         else if(Input.GetButtonDown("SaveWorld"))
         {
-            GameManager.theTempLevel = LevelCreatorManager.SerializeLevelIntoScriptObj(GameManager.theTempLevel);
+            SaveWorld();
         }
         else if(Input.GetButton("LoadWorld"))
         {
-            if(!inCorotine)
-            {
-                Debug.Log("PlayerController LoadWorld, StartCoroutine");
-                StartCoroutine(LoadWorld());
-            }
-
+            LoadWorldHelper();
         }
 	}
+
+    public void SavePosition()
+    {
+        posPoints.positionPoint = this.gameObject.transform.position;
+        posPoints.rotationPoint = this.gameObject.transform.rotation;
+        saveGhost.transform.position = gameObject.transform.position;
+        saveGhost.transform.rotation = gameObject.transform.rotation;
+    }
+
+    public void LoadPosition()
+    {
+        if (posPoints.positionPoint != null)
+        {
+            this.gameObject.transform.position = posPoints.positionPoint;
+            this.gameObject.transform.rotation = posPoints.rotationPoint;
+        }
+    }
+
+
+    public void SaveWorld()
+    {
+        GameManager.theTempLevel = LevelCreatorManager.SerializeLevelIntoScriptObj(GameManager.theTempLevel);
+    }
+
+    public void LoadWorldHelper()
+    {
+        if (!inCorotine)
+        {
+            Debug.Log("PlayerController LoadWorld, StartCoroutine");
+            StartCoroutine(LoadWorld());
+        }
+    }
 
     /// <summary>
     /// Remove all removable objects from world before reinstantiation
