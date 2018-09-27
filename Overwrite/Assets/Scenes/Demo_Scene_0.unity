@@ -924,9 +924,9 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
-  m_Volume: 1
+  m_audioClip: {fileID: 8300000, guid: 638c6c23ea24a584b8f2318a223fe0aa, type: 3}
+  m_PlayOnAwake: 0
+  m_Volume: 0.1
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -2376,11 +2376,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6f12364bce137f48812538358e24f2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  theWallPrefab: {fileID: 0}
-  theDoorPrefab: {fileID: 0}
-  thePlayerPrefab: {fileID: 0}
-  theLeverPrefab: {fileID: 0}
-  posPoints: {fileID: 11400000, guid: 01cc0803270c26a478145c877bb9f296, type: 2}
   saveGhost: {fileID: 1462490029507412, guid: 1849a2a9469c78445aa659e1195ad51b, type: 2}
   inCorotine: 0
 --- !u!114 &527670095
@@ -2795,6 +2790,7 @@ MonoBehaviour:
   thePlayerPrefab: {fileID: 0}
   theDoorPrefab: {fileID: 0}
   theLeverPrefab: {fileID: 0}
+  theEnemyPrefab: {fileID: 0}
   thePosPoints: {fileID: 11400000, guid: 01cc0803270c26a478145c877bb9f296, type: 2}
 --- !u!4 &591387030
 Transform:
@@ -3297,6 +3293,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   img: {fileID: 852731312}
+  whiteNoise: {fileID: 314113397}
   fadeOutTime: 0
 --- !u!114 &852731312
 MonoBehaviour:
@@ -3745,6 +3742,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   img: {fileID: 1027649833}
+  whiteNoise: {fileID: 0}
   fadeOutTime: 2
 --- !u!222 &1027649835
 CanvasRenderer:
