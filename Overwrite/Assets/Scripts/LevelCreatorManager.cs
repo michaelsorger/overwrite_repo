@@ -1,8 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 using Newtonsoft.Json;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 public class LevelCreatorManager : MonoBehaviour {
 
@@ -90,9 +93,11 @@ public class LevelCreatorManager : MonoBehaviour {
                 theLevelInfo.playerStartPosition = GameObject.FindGameObjectWithTag("PlayerStartPosition").gameObject.transform.position;
             }
 
+            #if UNITY_EDITOR
             //Save ScriptableObject when we are done adding data
             EditorUtility.SetDirty(theLevelInfo);
             AssetDatabase.SaveAssets();
+            #endif
         }
         else
         {

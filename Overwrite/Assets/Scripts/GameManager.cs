@@ -121,7 +121,7 @@ public class GameManager : MonoBehaviour
                 DeserializeFromScriptObj(LvlInfo);
 
                 //Update temp script obj with level
-                theTempLevel = new LevelInformation();
+                theTempLevel = ScriptableObject.CreateInstance<LevelInformation>();
                 theTempLevel.tagList = LvlInfo.tagList;
                 theTempLevel.tagGameObjectListJSON = LvlInfo.tagGameObjectListJSON;
                 theTempLevel.switcherControlJSON = LvlInfo.switcherControlJSON;

@@ -83,7 +83,7 @@ public class EnemyAI : MonoBehaviour
         if (collider.tag == "Player")
         {
             Debug.Log("YOU HAVE DIED");
-            Destroy(collider.gameObject);
+            collider.transform.position = GameManager.StaticPositionPoints.positionPoint;
         }
     }
 }
