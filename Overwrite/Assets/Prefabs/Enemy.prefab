@@ -260,7 +260,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 709aaa2f6f46941499d4c33caab853c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 0.05
+  speed: 3.5
   player: {fileID: 0}
   sight: {fileID: 114356671917329532}
   doExtraAction: 0

@@ -56,24 +56,24 @@ public class EnemyAI : MonoBehaviour
 		if (sight.isSeen) //player is seen, moving towards player
         {
             Vector3 moveTowards = new Vector3(player.transform.position.x, transform.position.y, player.transform.position.z);
-            transform.position = Vector3.MoveTowards(transform.position, moveTowards, speed);
+            transform.position = Vector3.MoveTowards(transform.position, moveTowards, speed * Time.deltaTime);
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(moveTowards - transform.position), 0.1F);
             playerSeen = true;
         }
         else if (playerSeen && doExtraAction && transform.position != extraActionLocation) //player has been seen recently
         {
-            transform.position = Vector3.MoveTowards(transform.position, extraActionLocation, speed);
+            transform.position = Vector3.MoveTowards(transform.position, extraActionLocation, speed * Time.deltaTime);
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(extraActionLocation - transform.position), 0.1F);
         }
         else if (transform.position != ogPosition) //enemy is moving towards original position
         {
             playerSeen = false;
-            transform.position = Vector3.MoveTowards(transform.position, ogPosition, speed);
+            transform.position = Vector3.MoveTowards(transform.position, ogPosition, speed * Time.deltaTime);
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(ogPosition - transform.position), 0.2F);
         }
         else //enemy is in original position
         {
-            transform.position = Vector3.MoveTowards(transform.position, ogPosition, speed);
+            transform.position = Vector3.MoveTowards(transform.position, ogPosition, speed * Time.deltaTime);
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(ogLook), 0.2F);
         }
     }

@@ -127,7 +127,7 @@ public class PlayerController : MonoBehaviour {
         GameObject[] gos = GameObject.FindGameObjectsWithTag("Enemy");
         foreach (GameObject go in gos)
         {
-            go.GetComponent<EnemyAI>().speed = 0.05f;
+            go.GetComponent<EnemyAI>().speed = 3.5f;
         }
     }
 }
