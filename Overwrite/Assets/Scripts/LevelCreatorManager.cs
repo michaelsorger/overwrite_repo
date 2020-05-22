@@ -24,11 +24,12 @@ public class LevelCreatorManager : MonoBehaviour {
     }
 
     /// <summary>
-    /// Compacts an entire level into a nice scriptable object 
+    /// Compacts an entire level into a new scriptable object using args defined in LevelInformation
     /// TagList is the list of tags used in this level
     /// </summary>
     public static LevelInformation SerializeLevelIntoScriptObj(LevelInformation theLevelInfo)
     {
+        LevelInformation retLevelInfo = null;
         if (theLevelInfo != null)
         {
             Debug.Log("Serializing " + theLevelInfo.name + " into scriptable object");
@@ -48,7 +49,7 @@ public class LevelCreatorManager : MonoBehaviour {
                     case "Switcher":
                         //Add switcher and its position, and what tag switcher references
                         //Serialized in form: [name:pos:rot:scale , tag I reference]
-                        //For example: [Lever:0:0:0 , "Lever_0"}
+                        //For example: {[Lever:0:0:0 , "Lever_0"]}
                         foreach (GameObject l in t_arr)
                         {
                             PositionRotationScale prs = new PositionRotationScale();
@@ -72,7 +73,7 @@ public class LevelCreatorManager : MonoBehaviour {
                         //For example: [Lever_0 , 5:5:5]
                         foreach (GameObject go in t_arr)
                         {
-                            LevelCreatorManager.SimpleAddToTagGameObjectMap(tagGameObjectMap, t, go);
+                            SimpleAddToTagGameObjectMap(tagGameObjectMap, t, go);
                         }
                         break;
                     default:
@@ -80,22 +81,30 @@ public class LevelCreatorManager : MonoBehaviour {
                 }
             }
 
-            //Serialize simple walls and doors with name and position information
-            theLevelInfo.tagGameObjectListJSON = JsonConvert.SerializeObject(tagGameObjectMap);
-            Debug.Log(theLevelInfo.tagGameObjectListJSON);
+            retLevelInfo = ScriptableObject.CreateInstance<LevelInformation>();
+            retLevelInfo.tagList = theLevelInfo.tagList;
+            retLevelInfo.tagGameObjectListJSON = JsonConvert.SerializeObject(tagGameObjectMap); //Serialize simple walls and doors with name and position information
+            retLevelInfo.switcherControlJSON = JsonConvert.SerializeObject(theSwtichControlDict); //Serialize levers with control information
 
-            //Serialize levers with control information
-            theLevelInfo.switcherControlJSON = JsonConvert.SerializeObject(theSwtichControlDict);
-
-            //Only in level creation, don't set playerStartPosition again
+            //Only defined in level creation
             if(GameObject.FindGameObjectWithTag("PlayerStartPosition") != null)
             {
-                theLevelInfo.playerStartPosition = GameObject.FindGameObjectWithTag("PlayerStartPosition").gameObject.transform.position;
+                retLevelInfo.playerStartPosition = GameObject.FindGameObjectWithTag("PlayerStartPosition").gameObject.transform.position;
+            }
+            else
+            {
+                retLevelInfo.playerStartPosition = theLevelInfo.playerStartPosition;
             }
 
-            #if UNITY_EDITOR
+            Debug.Log("returning following as vals in script obj");
+            Debug.Log(retLevelInfo.tagList);
+            Debug.Log(retLevelInfo.tagGameObjectListJSON);
+            Debug.Log(retLevelInfo.switcherControlJSON);
+            Debug.Log(retLevelInfo.playerStartPosition);
+
+#if UNITY_EDITOR
             //Save ScriptableObject when we are done adding data
-            EditorUtility.SetDirty(theLevelInfo);
+            EditorUtility.SetDirty(retLevelInfo);
             AssetDatabase.SaveAssets();
             #endif
         }
@@ -103,7 +112,8 @@ public class LevelCreatorManager : MonoBehaviour {
         {
             Debug.LogWarning("No levelInfo to build from!");
         }
-        return theLevelInfo;
+        theLevelInfo = null;
+        return retLevelInfo;
     }
 
     /// <summary>

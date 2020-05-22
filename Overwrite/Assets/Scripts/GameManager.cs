@@ -125,7 +125,6 @@ public class GameManager : MonoBehaviour
                 theTempLevel.tagList = LvlInfo.tagList;
                 theTempLevel.tagGameObjectListJSON = LvlInfo.tagGameObjectListJSON;
                 theTempLevel.switcherControlJSON = LvlInfo.switcherControlJSON;
-                theTempLevel.oneWaySwitcherControlJSON = LvlInfo.oneWaySwitcherControlJSON;
                 theTempLevel.playerStartPosition = LvlInfo.playerStartPosition;
 
                 //Update ui buttons to map to player

@@ -18,6 +18,7 @@ public class EnemyAI : MonoBehaviour
     /// Original look direction of enemy
     /// </summary>
     Vector3 ogLook;
+    private Quaternion ogLookRotation;
 
     /// <summary>
     /// Speed at which enemy moves
@@ -48,7 +49,9 @@ public class EnemyAI : MonoBehaviour
 	void Start () {
         ogPosition = transform.position;
         ogLook = transform.forward;
-	}
+        ogLookRotation = Quaternion.LookRotation(ogLook);
+    }
+    
 	
 	// Update is called once per frame
 	void Update ()
@@ -65,7 +68,7 @@ public class EnemyAI : MonoBehaviour
             transform.position = Vector3.MoveTowards(transform.position, extraActionLocation, speed * Time.deltaTime);
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(extraActionLocation - transform.position), 0.1F);
         }
-        else if (transform.position != ogPosition) //enemy is moving towards original position
+        else if (Vector3.Magnitude(transform.position - ogPosition) > .1f) //enemy is moving towards original position - magnitude check needed
         {
             playerSeen = false;
             transform.position = Vector3.MoveTowards(transform.position, ogPosition, speed * Time.deltaTime);
@@ -74,7 +77,7 @@ public class EnemyAI : MonoBehaviour
         else //enemy is in original position
         {
             transform.position = Vector3.MoveTowards(transform.position, ogPosition, speed * Time.deltaTime);
-            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(ogLook), 0.2F);
+            transform.rotation = Quaternion.Slerp(transform.rotation, ogLookRotation, 0.2F);
         }
     }
 
