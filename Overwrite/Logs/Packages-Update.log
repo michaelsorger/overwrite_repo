@@ -1,5 +1,9 @@
 
+<<<<<<< HEAD
 === Thu May 21 15:35:35 2020
+=======
+=== Fri Jan 11 21:42:20 2019
+>>>>>>> 6c748db4b041d63133093a16ff984306bc0fcab4
 
 Packages were changed.
 Update Mode: updateDependencies
@@ -7,6 +11,10 @@ Update Mode: updateDependencies
 The following packages were added:
   com.unity.collab-proxy@1.2.15
 The following packages were updated:
+<<<<<<< HEAD
+=======
+  com.unity.ads from version 2.0.8 to 2.3.1
+>>>>>>> 6c748db4b041d63133093a16ff984306bc0fcab4
   com.unity.analytics from version 2.0.16 to 3.2.2
   com.unity.package-manager-ui from version 1.9.11 to 2.0.3
   com.unity.textmeshpro from version 1.2.4 to 1.3.0
